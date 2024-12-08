@@ -611,6 +611,10 @@ pub async fn post_make_payment(
     .await
     .map_err(|e| map_string_err(r.clone(), e, StatusCode::INTERNAL_SERVER_ERROR))?;
 
+    if !response.success {
+        return r.into_err_internal(ApiErrorType::Generic(response.reason));
+    }
+
     let request = UserRequest::UserApi(UserApiRequest::SendNextPayment);
     if let Err(e) = peer.inject_next_event(peer.local_address(), request) {
         error!("route:make_payment error: {:?}", e);

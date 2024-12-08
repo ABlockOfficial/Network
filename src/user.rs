@@ -872,6 +872,8 @@ impl UserNode {
         &mut self,
         mempool_peer: SocketAddr,
     ) -> Result<()> {
+        // TODO: having next_payment as part of the node is error-prone, it would be better to
+        // simply pass the transaction in as an argument
         let (peer, tx) = self.next_payment.take().unwrap();
 
         debug!(
